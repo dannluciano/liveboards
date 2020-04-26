@@ -20,4 +20,8 @@ io.on('connection', (socket) => {
   socket.on('newline', (msg) => {
     socket.broadcast.emit('drawline', msg);
   });
+  socket.on('clear', (msg) => {
+    socket.broadcast.emit('clear', msg);
+    socket.emit('clear', msg);
+  });
 });

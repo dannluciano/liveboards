@@ -68,12 +68,25 @@
       socket.on('drawline', function (line) {
         drawLine(line)
       });
+      socket.on('clear', function (msg) {
+        console.log('clear')
+        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+      });
     });
 
     canvas.addEventListener('pointerdown', movimentStarted);
     canvas.addEventListener('pointermove', draw);
     canvas.addEventListener('pointerup', movementEnded);
     canvas.addEventListener('pointerout', movementEnded);
+
+    document.addEventListener("keyup", function (e) {
+      switch (e.which) {
+        // ESC
+        case 27:
+          socket.emit('clear', true);
+          break;
+      }
+    });
 
   </script>
 
