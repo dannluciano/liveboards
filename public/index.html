@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.strokeStyle = '#BADA55';
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 10;
+    // ctx.globalCompositeOperation = 'multiply';
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let hue = 0;
+    let events = []
+    let lastEvent = null
+
+    function drawPoint(x, y, endX, endY) {
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+      hue++;
+      if (hue >= 360) {
+        hue = 0;
+      }
+    }
+
+    function draw(e) {
+      if (!isDrawing) return; // stop the fn from running when they are not moused down
+      drawPoint(lastX, lastY, e.clientX, e.clientY);
+      [lastX, lastY] = [e.clientX, e.clientY];
+      lastEvent.path.push({
+        x: e.clientX,
+        y: e.clientY
+      })
+      socket.emit('drawend', lastEvent);
+    }
+
+    function movimentStarted(e) {
+      isDrawing = true;
+      [lastX, lastY] = [e.clientX, e.clientY];
+      lastEvent = {
+        path: [
+          {
+            x: lastX,
+            y: lastY
+          }
+        ]
+      }
+      socket.emit('drawend', lastEvent);
+    }
+
+    function movementEnded() {
+      isDrawing = false
+      if (lastEvent) {
+        const endTime = Date.now()
+        lastEvent.duration = endTime - lastEvent.startTime
+        socket.emit('drawend', lastEvent);
+        lastEvent = null
+      }
+
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log('init')
+      socket.on('newdraw', function (msg) {
+        console.log(msg);
+
+        for (let i = 0; i < msg.path.length - 1; i++) {
+          drawPoint(
+            msg.path[i].x, msg.path[i].y,
+            msg.path[i + 1].x, msg.path[i + 1].y)
+        }
+      });
+    });
+
+    canvas.addEventListener('pointerdown', movimentStarted);
+    canvas.addEventListener('pointermove', draw);
+    canvas.addEventListener('pointerup', movementEnded);
+    canvas.addEventListener('pointerout', movementEnded);
+
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      scrollbar-width: none;
+      background-color: black;
+    }
+  </style>
+
+</body>
+
+</html>
