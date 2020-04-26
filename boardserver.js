@@ -9,8 +9,10 @@ app.get('/hello', (req, res) => {
   res.send('<h1>Hello world</h1>');
 });
 
-http.listen(3000, () => {
-  console.log('listening on *:3000');
+const PORT = parseInt(process.env.PORT) || 3000
+
+http.listen(PORT, () => {
+  console.log('listening on *:' + PORT);
 });
 
 io.on('connection', (socket) => {
