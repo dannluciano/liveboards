@@ -17,7 +17,7 @@ http.listen(PORT, () => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('drawend', (msg) => {
-    socket.broadcast.emit('newdraw', msg);
+  socket.on('newline', (msg) => {
+    socket.broadcast.emit('drawline', msg);
   });
 });

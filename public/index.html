@@ -25,14 +25,12 @@
     let lastX = 0;
     let lastY = 0;
     let hue = 0;
-    let events = []
-    let lastEvent = null
 
-    function drawPoint(x, y, endX, endY) {
+    function drawLine(line) {
       ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
       ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(endX, endY);
+      ctx.moveTo(line.beginX, line.beginY);
+      ctx.lineTo(line.endX, line.endY);
       ctx.stroke();
       hue++;
       if (hue >= 360) {
@@ -40,52 +38,35 @@
       }
     }
 
-    function draw(e) {
-      if (!isDrawing) return; // stop the fn from running when they are not moused down
-      drawPoint(lastX, lastY, e.clientX, e.clientY);
-      [lastX, lastY] = [e.clientX, e.clientY];
-      lastEvent.path.push({
-        x: e.clientX,
-        y: e.clientY
-      })
-      socket.emit('drawend', lastEvent);
+    function draw(event) {
+      event.preventDefault()
+      if (!isDrawing) return;
+      newLine = {
+        beginX: lastX,
+        beginY: lastY,
+        endX: event.clientX,
+        endY: event.clientY
+      }
+      drawLine(newLine);
+      [lastX, lastY] = [event.clientX, event.clientY];
+      socket.emit('newline', newLine);
     }
 
-    function movimentStarted(e) {
+    function movimentStarted(event) {
+      event.preventDefault();
       isDrawing = true;
-      [lastX, lastY] = [e.clientX, e.clientY];
-      lastEvent = {
-        path: [
-          {
-            x: lastX,
-            y: lastY
-          }
-        ]
-      }
-      socket.emit('drawend', lastEvent);
+      [lastX, lastY] = [event.clientX, event.clientY];
     }
 
-    function movementEnded() {
-      isDrawing = false
-      if (lastEvent) {
-        const endTime = Date.now()
-        lastEvent.duration = endTime - lastEvent.startTime
-        socket.emit('drawend', lastEvent);
-        lastEvent = null
-      }
-
+    function movementEnded(event) {
+      event.preventDefault();
+      isDrawing = false;
     }
 
     document.addEventListener("DOMContentLoaded", function () {
       console.log('init')
-      socket.on('newdraw', function (msg) {
-        console.log(msg);
-
-        for (let i = 0; i < msg.path.length - 1; i++) {
-          drawPoint(
-            msg.path[i].x, msg.path[i].y,
-            msg.path[i + 1].x, msg.path[i + 1].y)
-        }
+      socket.on('drawline', function (line) {
+        drawLine(line)
       });
     });
 
@@ -102,6 +83,9 @@
       margin: 0;
       scrollbar-width: none;
       background-color: black;
+      overflow: hidden;
+      height: 100%;
+      touch-action: none;
     }
   </style>
 
