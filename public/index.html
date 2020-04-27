@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
   <title>LiveBoards</title>
   <script src="https://kit.fontawesome.com/501d159087.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/bulma.min.css">
@@ -23,18 +24,28 @@
 
     canvas {
       border: 1px solid #AAA;
+      user-select: none;
     }
 
-    button {
-      padding: 0;
+    .noselect {
+      -webkit-touch-callout: none;
+      /* iOS Safari */
+      -webkit-user-select: none;
+      /* Safari */
+      -khtml-user-select: none;
+      /* Konqueror HTML */
+      -moz-user-select: none;
+      /* Old versions of Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
+      user-select: none;
     }
   </style>
 </head>
 
-<body>
-
-  <canvas id="draw" width="800" height="800"></canvas>
-  <div class="container">
+<body class="noselect">
+  <canvas id="draw" width="800" height="800" class="noselect"></canvas>
+  <div class="container noselect">
     <div class="content">
       <form id="toolbar" class="form">
         <div class="field is-horizontal">
@@ -53,7 +64,7 @@
             </div>
             <div class="field">
               <p class="control is-expanded has-icons-left">
-                <input id="sizeInput" type="range" min="1" max="25" value="10" class="input is-small">
+                <input id="sizeInput" type="range" min="5" max="50" value="10" class="input is-small">
                 <span class="icon is-small is-left">
                   <i class="fas fa-pencil-alt"></i>
                 </span>
@@ -90,7 +101,7 @@
 
     function drawLine(line) {
       ctx.strokeStyle = line.color;
-      ctx.lineWidth = line.size;
+      ctx.lineWidth = line.size * line.pressure;
       ctx.beginPath();
       ctx.moveTo(line.beginX, line.beginY);
       ctx.lineTo(line.endX, line.endY);
@@ -111,10 +122,12 @@
         endY: event.clientY,
         color: currentColor,
         size: currentLineSize,
+        pressure: event.pressure || 1
       }
       drawLine(newLine);
       [lastX, lastY] = [event.clientX, event.clientY];
       socket.emit('newline', newLine);
+      console.log(event)
     }
 
     function movimentStarted(event) {
