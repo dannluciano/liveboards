@@ -103,6 +103,8 @@
     ctx.lineCap = 'round';
     currentColor = '#000';
     currentLineSize = 10;
+    const backgroundColor = 'white'
+    const borderColor = 'black'
     // ctx.globalCompositeOperation = 'multiply';
 
     let isDrawing = false;
@@ -112,6 +114,8 @@
 
     function clearCanvas() {
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     function drawLine(line) {
@@ -156,7 +160,17 @@
       isDrawing = false;
     }
 
+    function downloadImage() {
+      var link = document.createElement('a');
+      link.download = 'liveboard.png';
+      link.href = canvas.toDataURL()
+      link.click();
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
+      clearCanvas()
+      canvas.style.borderColor = borderColor;
+
       socket.on('drawline', function (line) {
         drawLine(line)
       });
@@ -167,6 +181,11 @@
       const clearButton = document.getElementById('clearButton')
       clearButton.addEventListener('click', function (event) {
         socket.emit('clear', true);
+      })
+
+      const downloadButton = document.getElementById('downloadButton')
+      downloadButton.addEventListener('click', function (event) {
+        downloadImage()
       })
 
       const colorInput = document.getElementById('colorInput')
