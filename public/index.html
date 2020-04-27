@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="Description" content="Digital [White|Black]Boards with Real-Time support">
   <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
   <title>LiveBoards</title>
   <script src="https://kit.fontawesome.com/501d159087.js" crossorigin="anonymous"></script>
@@ -25,6 +26,11 @@
     canvas {
       border: 1px solid #AAA;
       user-select: none;
+    }
+
+    button {
+      width: 40px;
+      height: 30px;
     }
 
     .noselect {
@@ -51,8 +57,17 @@
         <div class="field is-horizontal">
           <div class="field-body">
             <div class="field">
-              <button id="themeButton" type="button" class="button is-small">🌓</button>
-              <button id="clearButton" type="button" class="button is-small is-danger">Clear</button>
+              <button id="themeButton" type="button" aria-label="Change Theme" class="button is-small">🌓</button>
+              <button id="clearButton" type="button" aria-label="Clear Screen" class="button is-small is-danger">
+                <span class="icon">
+                  <i class="fas fa-eraser"></i>
+                </span>
+              </button>
+              <button id="downloadButton" type="button" aria-label="Download" class="button is-small is-success">
+                <span class="icon">
+                  <i class="fas fa-download"></i>
+                </span>
+              </button>
             </div>
             <div class="field">
               <p class="control is-expanded has-icons-left">
