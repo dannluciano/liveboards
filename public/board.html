@@ -14,6 +14,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="LiveBoards">
   <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png">
+  
 
   <meta name="theme-color" content="#FFFFFF" />
 
@@ -70,9 +71,9 @@
           <div class="field-body">
             <div class="field">
               <button id="themeButton" type="button" aria-label="Change Theme" class="button is-small">🌓</button>
-              <button id="clearButton" type="button" aria-label="Clear Screen" class="button is-small is-danger">
+              <button id="newButton" type="button" aria-label="New Board" class="button is-small is-primary">
                 <span class="icon">
-                  <i class="fas fa-eraser"></i>
+                  <i class="fas fa-file"></i>
                 </span>
               </button>
               <button id="downloadButton" type="button" aria-label="Download" class="button is-small is-success">
@@ -80,10 +81,15 @@
                   <i class="fas fa-download"></i>
                 </span>
               </button>
+              <!-- <button id="shareButton" type="button" aria-label="Share Board" class="button is-small is-info">
+                <span class="icon">
+                  <i class="fas fa-share"></i>
+                </span>
+              </button> -->
             </div>
             <div class="field">
               <p class="control is-expanded has-icons-left">
-                <input id="colorInput" type="color" value="#00000" class="input is-small">
+                <input id="colorInput" type="color" value="#000000" class="input is-small">
                 <span class="icon is-small is-left">
                   <i class="fas fa-palette"></i>
                 </span>
@@ -97,6 +103,14 @@
                 </span>
               </p>
             </div>
+            <div class="field">
+              <button id="clearButton" type="button" aria-label="Clear Screen"
+                class="button is-small is-danger is-pulled-right">
+                <span class="icon">
+                  <i class="fas fa-eraser"></i>
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -107,6 +121,8 @@
   </footer> -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    const boardID = location.href.substr(-36)
+    const canDraw = boardID === document.cookie.substr(6)
     const socket = io();
     const toolbar = document.getElementById('toolbar');
     const canvas = document.getElementById('draw');
@@ -120,6 +136,7 @@
     currentLineSize = 10;
     const backgroundColor = 'white'
     const borderColor = 'black'
+    const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
     // ctx.globalCompositeOperation = 'multiply';
 
     let isDrawing = false;
@@ -148,7 +165,7 @@
 
     function draw(event) {
       event.preventDefault()
-      if (!isDrawing) return;
+      if (!isDrawing || !canDraw) return;
       newLine = {
         beginX: lastX,
         beginY: lastY,
@@ -160,7 +177,7 @@
       }
       drawLine(newLine);
       [lastX, lastY] = [event.clientX, event.clientY];
-      socket.emit('newline', newLine);
+      socket.emit('newline', boardID, newLine);
     }
 
     function movimentStarted(event) {
@@ -181,7 +198,30 @@
       link.click();
     }
 
+    function goToURL(url) {
+      var link = document.createElement('a');
+      link.href = url
+      link.click();
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
+      socket.emit('create', boardID);
+
+      canvas.addEventListener('pointerdown', movimentStarted);
+      canvas.addEventListener('pointermove', draw);
+      canvas.addEventListener('pointerup', movementEnded);
+      canvas.addEventListener('pointerout', movementEnded);
+
+      document.addEventListener("keyup", function (e) {
+        switch (e.which) {
+          // ESC
+          case 27:
+            if (canDraw) {
+              socket.emit('clear', boardID);
+            }
+            break;
+        }
+      });
       clearCanvas()
       canvas.style.borderColor = borderColor;
 
@@ -192,10 +232,32 @@
         clearCanvas()
       });
 
-      const clearButton = document.getElementById('clearButton')
-      clearButton.addEventListener('click', function (event) {
-        socket.emit('clear', true);
+      const newButton = document.getElementById('newButton')
+      newButton.addEventListener('click', function (event) {
+        goToURL('/new')
       })
+
+      // const shareButton = document.getElementById('shareButton')
+      // shareButton.addEventListener('click', async function (event) {
+      //   const url = location.href
+      //   if (navigator.share) {
+      //     const shareData = {
+      //       title: 'LiveBoards',
+      //       text: DESCRIPTION,
+      //       url: location.href
+      //     }
+      //     await navigator.share(shareData)
+      //     alert('oi')
+      //   } else {
+      //     const p = document.createElement('input')
+      //     p.type = 'hidden'
+      //     p.value = url
+      //     document.body.append(p)
+      //     p.select()
+      //     document.execCommand("copy")
+      //     alert('ola')
+      //   }
+      // })
 
       const downloadButton = document.getElementById('downloadButton')
       downloadButton.addEventListener('click', function (event) {
@@ -214,31 +276,37 @@
       })
       currentLineSize = sizeInput.value
 
+      const clearButton = document.getElementById('clearButton')
+      clearButton.addEventListener('click', function (event) {
+        clearCanvas();
+        socket.emit('clear', boardID);
+      })
+
+      const editorToolbarItens = [clearButton, colorInput, sizeInput]
+      editorToolbarItens.forEach(element => {
+        if (!canDraw) {
+          element.classList.add('is-hidden')
+        }
+      });
+
+      // new ClipboardJS('.button', {
+      //   text: function (trigger) {
+      //     return location.href
+      //   }
+      // });
+
     });
 
-    canvas.addEventListener('pointerdown', movimentStarted);
-    canvas.addEventListener('pointermove', draw);
-    canvas.addEventListener('pointerup', movementEnded);
-    canvas.addEventListener('pointerout', movementEnded);
-
-    document.addEventListener("keyup", function (e) {
-      switch (e.which) {
-        // ESC
-        case 27:
-          socket.emit('clear', true);
-          break;
-      }
-    });
 
     if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then(registration => {
-        console.log('SW registered: ', registration);
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+          console.log('SW registered: ', registration);
+        }).catch(registrationError => {
+          console.log('SW registration failed: ', registrationError);
+        });
       });
-    });
-  }
+    }
 
 
   </script>

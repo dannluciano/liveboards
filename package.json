@@ -5,13 +5,17 @@
   "main": "boardserver.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node boardserver.js"
+    "start": "node boardserver.js",
+    "build": "workbox generateSW",
+    "deploy": "git push heroku master"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
-    "socketio": "^1.0.0"
+    "socketio": "^1.0.0",
+    "uuid": "^7.0.3"
   }
 }
