@@ -2,12 +2,24 @@
 <html lang="en">
 
 <head>
+  <link rel="manifest" href="/manifest.json">
   <meta charset="UTF-8">
   <meta name="Description" content="Digital [White|Black]Boards with Real-Time support">
   <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="LiveBoards">
+  <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png">
+
+  <meta name="theme-color" content="#FFFFFF" />
+
   <title>LiveBoards</title>
-  <script src="https://kit.fontawesome.com/501d159087.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/bulma.min.css">
+  <link rel="stylesheet" href="/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -90,6 +102,9 @@
       </form>
     </div>
   </div>
+  <!-- <footer>
+    All emojis designed by OpenMoji – the open-source emoji and icon project. License: CC BY-SA 4.0
+  </footer> -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
@@ -146,7 +161,6 @@
       drawLine(newLine);
       [lastX, lastY] = [event.clientX, event.clientY];
       socket.emit('newline', newLine);
-      console.log(event)
     }
 
     function movimentStarted(event) {
@@ -216,8 +230,18 @@
       }
     });
 
-  </script>
+    if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then(registration => {
+        console.log('SW registered: ', registration);
+      }).catch(registrationError => {
+        console.log('SW registration failed: ', registrationError);
+      });
+    });
+  }
 
+
+  </script>
 </body>
 
 </html>
