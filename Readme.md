@@ -3,9 +3,18 @@
 Digital [White|Black]Boards with Real-Time support.
 See this in [action](https://liveboards.herokuapp.com/).
 
-## Getting Started
-<!-- 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. -->
+## Features
+
+  * Awesome Real-Time support;
+  * No Accounts or Login problems;
+  * Support for Mouse, Touch, Pencil with pressure;
+  * Colors and Line width controls;
+  * Rainbow Mode;
+  * Ilimited Boards;
+  * Download Button;
+  * Share Button;
+  * Ligth and Dark Mode;
+  * Build with Progressive Web App.
 
 ### Prerequisites
 
