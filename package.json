@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node boardserver.js",
-    "sw": "workbox generateSW",
+    "build": "workbox generateSW",
     "deploy": "git push heroku master"
   },
   "author": "",
@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "socketio": "^1.0.0",
-    "uuid": "^7.0.3"
+    "uuid": "^7.0.3",
+    "workbox": "0.0.0"
   }
 }
