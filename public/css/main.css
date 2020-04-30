@@ -1,0 +1,65 @@
+:root {
+    --black: #002635;
+    --white: #FFFFFF;
+    --black-ligth: #002635;
+    --white-ligth: #E6E6DC;
+}
+
+[data-theme=dark] {
+    --bg: var(--black);
+    --fg: var(--white);
+    background-color: var(--bg) !important;
+    color: var(--fg);
+}
+
+[data-theme=ligth] {
+    --bg: var(--white);
+    --fg: var(--black);
+    background-color: var(--bg) !important;
+    color: var(--fg);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    scrollbar-width: none;
+    background-color: white;
+    overflow: hidden;
+    height: 100%;
+    touch-action: none;
+}
+
+canvas {
+    border: 1px solid #AAA;
+    user-select: none;
+}
+
+button {
+    width: 40px;
+    height: 30px;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.button {
+    background-color: var(--bg);
+}
+
+.input {
+    background-color: var(--bg);
+}

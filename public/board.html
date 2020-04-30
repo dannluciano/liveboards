@@ -20,49 +20,12 @@
 
   <title>LiveBoards</title>
   <link rel="stylesheet" href="/css/bulma.min.css">
+  <link rel="stylesheet" href="/css/main.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
 
-    html,
-    body {
-      margin: 0;
-      scrollbar-width: none;
-      background-color: white;
-      overflow: hidden;
-      height: 100%;
-      touch-action: none;
-    }
-
-    canvas {
-      border: 1px solid #AAA;
-      user-select: none;
-    }
-
-    button {
-      width: 40px;
-      height: 30px;
-    }
-
-    .noselect {
-      -webkit-touch-callout: none;
-      /* iOS Safari */
-      -webkit-user-select: none;
-      /* Safari */
-      -khtml-user-select: none;
-      /* Konqueror HTML */
-      -moz-user-select: none;
-      /* Old versions of Firefox */
-      -ms-user-select: none;
-      /* Internet Explorer/Edge */
-      user-select: none;
-    }
-  </style>
 </head>
 
-<body class="noselect">
+<body data-theme=ligth class="noselect">
   <canvas id="draw" width="800" height="800" class="noselect"></canvas>
   <div class="container noselect">
     <div class="content">
@@ -141,16 +104,24 @@
     const canvas = document.getElementById('draw');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth - 2;
-    canvas.height = window.innerHeight - toolbar.getBoundingClientRect().height - 20;
+    canvas.height = window.innerHeight - toolbar.getBoundingClientRect().height - 14;
     ctx.strokeStyle = '#BADA55';
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    currentColor = '#000';
-    currentLineSize = 10;
-    const backgroundColor = 'white'
-    const borderColor = 'black'
-    const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
     // ctx.globalCompositeOperation = 'multiply';
+
+    let currentColor = '#000';
+    let currentLineSize = 10;
+
+    const black = '#002635';
+    const white = '#FFFFFF';
+
+    let theme = 'ligth'
+
+    let backgroundColor = white
+    let borderColor = black
+
+    const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
 
     let isRainbowMode = false;
     let hue = 0;
@@ -162,6 +133,7 @@
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      canvas.style.borderColor = borderColor;
     }
 
     function drawLine(line) {
@@ -181,7 +153,7 @@
       event.preventDefault();
       if (!isDrawing || !canDraw) return;
       let color = currentColor;
-      
+
       if (isRainbowMode) {
         color = `hsl(${hue}, 100%, 50%)`;
         hue++;
@@ -226,16 +198,34 @@
       link.click();
     }
 
+    function toggleTheme() {
+      const element = document.body
+      switch (element.dataset.theme) {
+        case 'ligth':
+          element.dataset.theme = 'dark'
+          backgroundColor = black
+          borderColor = white
+          break
+        case 'dark':
+          element.dataset.theme = 'ligth'
+          backgroundColor = white
+          borderColor = black
+          break
+      }
+      localStorage.setItem('theme', element.dataset.theme)
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
+
+      theme = localStorage.getItem('theme') || 'ligth'
+      document.body.dataset.theme = theme
+
       socket.emit('create', boardID);
 
       canvas.addEventListener('pointerdown', movimentStarted);
       canvas.addEventListener('pointermove', draw);
       canvas.addEventListener('pointerup', movementEnded);
-      canvas.addEventListener('pointerout', movementEnded);
-
-      clearCanvas()
-      canvas.style.borderColor = borderColor;
+      canvas.addEventListener('pointerout', movementEnded);      
 
       socket.on('drawline', function (line) {
         drawLine(line)
@@ -243,6 +233,9 @@
       socket.on('clear', function (msg) {
         clearCanvas()
       });
+
+      const themeButton = document.getElementById('themeButton')
+      themeButton.addEventListener('click', toggleTheme)
 
       const newButton = document.getElementById('newButton')
       newButton.addEventListener('click', function (event) {
@@ -287,7 +280,7 @@
       })
 
       const rainbowControl = document.getElementById('rainbowControl')
-      rainbowControl.addEventListener('click', function(event) {
+      rainbowControl.addEventListener('click', function (event) {
         isRainbowMode = rainbowControl.checked
       })
 
