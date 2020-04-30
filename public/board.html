@@ -14,7 +14,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="LiveBoards">
   <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png">
-  
+
 
   <meta name="theme-color" content="#FFFFFF" />
 
@@ -81,11 +81,11 @@
                   <i class="fas fa-download"></i>
                 </span>
               </button>
-              <!-- <button id="shareButton" type="button" aria-label="Share Board" class="button is-small is-info">
+              <button id="shareButton" type="button" aria-label="Share Board" class="button is-small is-info">
                 <span class="icon">
                   <i class="fas fa-share"></i>
                 </span>
-              </button> -->
+              </button>
             </div>
             <div class="field">
               <p class="control is-expanded has-icons-left">
@@ -104,12 +104,19 @@
               </p>
             </div>
             <div class="field">
-              <button id="clearButton" type="button" aria-label="Clear Screen"
-                class="button is-small is-danger is-pulled-right">
-                <span class="icon">
-                  <i class="fas fa-eraser"></i>
-                </span>
-              </button>
+              <div class="field-group ispulled-reght">
+                <button id="refreshButton" type="button" aria-label="Refresh Page" class="button is-small is-warning">
+                  <span class="icon">
+                    <i class="fas fa-retweet"></i>
+                  </span>
+                </button>
+                <button id="clearButton" type="button" aria-label="Clear Screen" class="button is-small is-danger">
+                  <span class="icon">
+                    <i class="fas fa-eraser"></i>
+                  </span>
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
@@ -120,6 +127,7 @@
     All emojis designed by OpenMoji – the open-source emoji and icon project. License: CC BY-SA 4.0
   </footer> -->
   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
   <script>
     const boardID = location.href.substr(-36)
     const canDraw = boardID === document.cookie.substr(6)
@@ -212,16 +220,6 @@
       canvas.addEventListener('pointerup', movementEnded);
       canvas.addEventListener('pointerout', movementEnded);
 
-      document.addEventListener("keyup", function (e) {
-        switch (e.which) {
-          // ESC
-          case 27:
-            if (canDraw) {
-              socket.emit('clear', boardID);
-            }
-            break;
-        }
-      });
       clearCanvas()
       canvas.style.borderColor = borderColor;
 
@@ -237,28 +235,38 @@
         goToURL('/new')
       })
 
-      // const shareButton = document.getElementById('shareButton')
-      // shareButton.addEventListener('click', async function (event) {
-      //   const url = location.href
-      //   if (navigator.share) {
-      //     const shareData = {
-      //       title: 'LiveBoards',
-      //       text: DESCRIPTION,
-      //       url: location.href
-      //     }
-      //     await navigator.share(shareData)
-      //     alert('oi')
-      //   } else {
-      //     const p = document.createElement('input')
-      //     p.type = 'hidden'
-      //     p.value = url
-      //     document.body.append(p)
-      //     p.select()
-      //     document.execCommand("copy")
-      //     alert('ola')
-      //   }
-      // })
+      const shareButton = document.getElementById('shareButton')
+      if (navigator.share) {
+        shareButton.addEventListener('click', async function (event) {
+          const url = location.href
 
+          const shareData = {
+            title: document.title,
+            text: DESCRIPTION,
+            url: url
+          }
+          navigator.share(shareData).then(
+            () => {
+              console.info("Shared!")
+            },
+            (err) => {
+              console.error(err)
+            })
+        })
+      } else {
+        const clipboard = new ClipboardJS(
+          shareButton,
+          {
+            text: function (trigger) {
+              return location.href;
+            }
+          }
+        );
+        clipboard.on('success', function (e) {
+          alert('Url copiada com sucesso!')
+        })
+      }
+      
       const downloadButton = document.getElementById('downloadButton')
       downloadButton.addEventListener('click', function (event) {
         downloadImage()
@@ -276,10 +284,17 @@
       })
       currentLineSize = sizeInput.value
 
+      const refreshButton = document.getElementById('refreshButton')
+      refreshButton.addEventListener('click', function (event) {
+        location.reload()
+      })
+
       const clearButton = document.getElementById('clearButton')
       clearButton.addEventListener('click', function (event) {
-        clearCanvas();
-        socket.emit('clear', boardID);
+        if (confirm('Tem certeza que deseja limpar o quadro?')) {
+          clearCanvas();
+          socket.emit('clear', boardID);
+        }
       })
 
       const editorToolbarItens = [clearButton, colorInput, sizeInput]
@@ -288,12 +303,6 @@
           element.classList.add('is-hidden')
         }
       });
-
-      // new ClipboardJS('.button', {
-      //   text: function (trigger) {
-      //     return location.href
-      //   }
-      // });
 
     });
 
