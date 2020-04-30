@@ -1,6 +1,7 @@
-# LiveBoards
+# [LiveBoards](https://liveboards.herokuapp.com/)
 
-Digital [White|Black]Boards with Real-Time support
+Digital [White|Black]Boards with Real-Time support.
+See this in [action](https://liveboards.herokuapp.com/).
 
 ## Getting Started
 <!-- 
@@ -65,6 +66,7 @@ Inspired:
 * by [JavaScript30](https://javascript30.com/) by [@WesBos](https://twitter.com/wesbos)
 * and by Corona Virus
 
-Thanks to IFPI!
+Thanks to [IFPI](https://www.ifpi.edu.br/) for pay my salary!
+
 ![IFPI](https://github.com/dannluciano/liveboards/raw/master/doc/ifpi.png)
 
