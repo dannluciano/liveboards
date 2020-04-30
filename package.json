@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node boardserver.js",
-    "build": "workbox generateSW",
+    "build": "npx workbox generateSW",
     "deploy": "git push heroku master"
   },
   "author": "",
