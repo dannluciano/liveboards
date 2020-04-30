@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node boardserver.js",
-    "build": "node_modules/.bin/workbox generateSW",
+    "build": "npx workbox generateSW",
     "deploy": "git push heroku master"
   },
   "author": "",
@@ -17,6 +17,6 @@
     "express": "^4.17.1",
     "socketio": "^1.0.0",
     "uuid": "^7.0.3",
-    "workbox": "0.0.0"
+    "workbox-cli": "^5.1.3"
   }
 }
