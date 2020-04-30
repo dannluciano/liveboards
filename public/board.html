@@ -88,6 +88,12 @@
               </button>
             </div>
             <div class="field">
+              <label class="checkbox is-pulled-right">
+                <input id="rainbowControl" name="rainbowControl" type="checkbox">
+                🌈
+              </label>
+            </div>
+            <div class="field">
               <p class="control is-expanded has-icons-left">
                 <input id="colorInput" type="color" value="#000000" class="input is-small">
                 <span class="icon is-small is-left">
@@ -116,7 +122,6 @@
                   </span>
                 </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -147,10 +152,11 @@
     const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
     // ctx.globalCompositeOperation = 'multiply';
 
+    let isRainbowMode = false;
+    let hue = 0;
     let isDrawing = false;
     let lastX = 0;
     let lastY = 0;
-    let hue = 0;
 
     function clearCanvas() {
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
@@ -172,14 +178,22 @@
     }
 
     function draw(event) {
-      event.preventDefault()
+      event.preventDefault();
       if (!isDrawing || !canDraw) return;
+      let color = currentColor;
+      
+      if (isRainbowMode) {
+        color = `hsl(${hue}, 100%, 50%)`;
+        hue++;
+        hue = hue % 360;
+      }
+
       newLine = {
         beginX: lastX,
         beginY: lastY,
         endX: event.clientX,
         endY: event.clientY,
-        color: currentColor,
+        color: color,
         size: currentLineSize,
         pressure: event.pressure || 1
       }
@@ -266,10 +280,15 @@
           alert('Url copiada com sucesso!')
         })
       }
-      
+
       const downloadButton = document.getElementById('downloadButton')
       downloadButton.addEventListener('click', function (event) {
         downloadImage()
+      })
+
+      const rainbowControl = document.getElementById('rainbowControl')
+      rainbowControl.addEventListener('click', function(event) {
+        isRainbowMode = rainbowControl.checked
       })
 
       const colorInput = document.getElementById('colorInput')
