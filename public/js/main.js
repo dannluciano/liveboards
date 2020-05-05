@@ -1,8 +1,13 @@
 /* eslint-env browser */
 /* global io, ClipboardJS */
 
+function getCookie (name) {
+  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
+  return v ? v[2] : null
+}
+
 const boardID = location.href.substr(-36)
-const canDraw = boardID === document.cookie.substr(6)
+const canDraw = boardID === getCookie('owner')
 const socket = io()
 const toolbar = document.getElementById('toolbar')
 const canvas = document.getElementById('draw')
