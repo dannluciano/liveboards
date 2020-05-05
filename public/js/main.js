@@ -12,8 +12,7 @@ const socket = io()
 const toolbar = document.getElementById('toolbar')
 const canvas = document.getElementById('draw')
 const ctx = canvas.getContext('2d')
-canvas.width = window.innerWidth - 2
-canvas.height = window.innerHeight - toolbar.getBoundingClientRect().height - 14
+
 ctx.strokeStyle = '#BADA55'
 ctx.lineJoin = 'round'
 ctx.lineCap = 'round'
@@ -37,6 +36,11 @@ let currentLineSize = 10
 let lastPressure = '0.5'
 let lastX = 0
 let lastY = 0
+
+function resize () {
+  canvas.width = window.innerWidth - 2
+  canvas.height = window.innerHeight - toolbar.getBoundingClientRect().height - 14
+}
 
 function clearCanvas () {
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
@@ -127,6 +131,9 @@ document.addEventListener('DOMContentLoaded', function () {
   document.body.dataset.theme = theme
 
   socket.emit('create', boardID)
+
+  window.addEventListener('resize', resize, false)
+  resize()
 
   canvas.addEventListener('pointerdown', movimentStarted)
   canvas.addEventListener('pointermove', draw)
