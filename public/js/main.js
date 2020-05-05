@@ -223,6 +223,11 @@ document.addEventListener('DOMContentLoaded', function () {
     currentColor = event.target.value
   })
   currentColor = colorInput.value
+  colorInput.addEventListener('click', function (event) {
+    if (isRainbowMode) {
+      rainbowControl.click()
+    }
+  })
 
   const sizeInput = document.getElementById('sizeInput')
   sizeInput.addEventListener('change', function (event) {
