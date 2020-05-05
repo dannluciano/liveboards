@@ -25,12 +25,6 @@ const toolbar = document.getElementById('toolbar')
 const canvas = document.getElementById('draw')
 const ctx = canvas.getContext('2d')
 
-ctx.strokeStyle = '#BADA55'
-ctx.lineJoin = 'round'
-ctx.lineCap = 'round'
-
-// ctx.globalCompositeOperation = 'multiply';
-
 const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
 const BLACK = '#002635'
 const WHITE = '#FFFFFF'
@@ -62,12 +56,15 @@ function clearCanvas () {
 }
 
 function drawLine (line) {
+  ctx.lineJoin = 'round'
+  ctx.lineCap = 'round'
   ctx.strokeStyle = line.color
   ctx.lineWidth = line.size * line.pressure
   ctx.beginPath()
   ctx.moveTo(line.beginX, line.beginY)
   ctx.lineTo(line.endX, line.endY)
   ctx.stroke()
+  ctx.closePath()
 }
 
 function draw (event) {
