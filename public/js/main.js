@@ -17,6 +17,7 @@ canvas.height = window.innerHeight - toolbar.getBoundingClientRect().height - 14
 ctx.strokeStyle = '#BADA55'
 ctx.lineJoin = 'round'
 ctx.lineCap = 'round'
+
 // ctx.globalCompositeOperation = 'multiply';
 
 const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
@@ -29,7 +30,7 @@ let borderColor = WHITE
 
 let isRainbowMode = false
 let isDrawing = false
-let currentColor = '#000'
+let currentColor = '#0000FF'
 let hue = 0
 let currentLineSize = 10
 
