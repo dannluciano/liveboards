@@ -109,18 +109,29 @@ function goToURL (url) {
   link.click()
 }
 
+function setTheme (theme) {
+  switch (theme) {
+    case 'ligth':
+      backgroundColor = WHITE
+      borderColor = BLACK
+      break
+    case 'dark':
+      backgroundColor = BLACK
+      borderColor = WHITE
+      break
+  }
+}
+
 function toggleTheme () {
   const element = document.body
   switch (element.dataset.theme) {
     case 'ligth':
       element.dataset.theme = 'dark'
-      backgroundColor = BLACK
-      borderColor = WHITE
+      setTheme('dark')
       break
     case 'dark':
       element.dataset.theme = 'ligth'
-      backgroundColor = WHITE
-      borderColor = BLACK
+      setTheme('ligth')
       break
   }
   localStorage.setItem('theme', element.dataset.theme)
@@ -129,6 +140,7 @@ function toggleTheme () {
 document.addEventListener('DOMContentLoaded', function () {
   theme = localStorage.getItem('theme') || 'ligth'
   document.body.dataset.theme = theme
+  setTheme(theme)
 
   socket.emit('create', boardID)
 
