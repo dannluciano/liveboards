@@ -6,6 +6,18 @@ function getCookie (name) {
   return v ? v[2] : null
 }
 
+function throttle (callback, delay) {
+  var previousCall = new Date().getTime()
+  return function () {
+    var time = new Date().getTime()
+
+    if ((time - previousCall) >= delay) {
+      previousCall = time
+      callback.apply(null, arguments)
+    }
+  }
+}
+
 const boardID = location.href.substr(-36)
 const canDraw = boardID === getCookie('owner')
 const socket = io()
@@ -148,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
   resize()
 
   canvas.addEventListener('pointerdown', movimentStarted)
-  canvas.addEventListener('pointermove', draw)
+  canvas.addEventListener('pointermove', throttle(draw, 10))
   canvas.addEventListener('pointerup', movementEnded)
   canvas.addEventListener('pointerout', movementEnded)
 
