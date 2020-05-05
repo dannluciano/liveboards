@@ -11,14 +11,25 @@ var app = express()
 var http = require('http').createServer(app)
 var io = require('socket.io')(http)
 
+const TITLE = 'LiveBoards'
+const DESCRIPTION = 'Digital [White|Black]Boards with Real-Time support'
+
+app.set('view engine', 'ejs')
+
 app.use(compression())
 
 app.use(cookieParser(DEFAULT_SECRET))
 
 app.use(express.static('public'))
 
+app.use((req, res, next) => {
+  res.locals.title = TITLE
+  res.locals.description = DESCRIPTION
+  next()
+})
+
 app.get('/', (req, res) => {
-  res.redirect('/new')
+  res.render('index.html.ejs')
 })
 
 app.get('/new', (req, res) => {
@@ -28,10 +39,7 @@ app.get('/new', (req, res) => {
 })
 
 app.get('/board/:uuid', (req, res) => {
-  res.sendFile('board.html', {
-    root: path.join(__dirname, 'public'),
-    dotfiles: 'deny'
-  })
+  res.render('board.html.ejs')
 })
 
 http.listen(PORT, () => {
