@@ -43,6 +43,8 @@ let lastPressure = '0.5'
 let lastX = 0
 let lastY = 0
 
+let penMode
+
 function resize () {
   canvas.width = window.innerWidth - 2
   canvas.height = window.innerHeight - toolbar.getBoundingClientRect().height - 14
@@ -70,12 +72,23 @@ function drawLine (line) {
 function draw (event) {
   event.preventDefault()
   if (!isDrawing || !canDraw) return
+
   let color = currentColor
+  let pressure = event.pressure || lastPressure
+  let lineSize = currentLineSize
 
   if (isRainbowMode) {
     color = `hsl(${hue}, 100%, 50%)`
     hue++
     hue = hue % 361
+  }
+
+  if (penMode) {
+    if (event.pointerType !== 'pen') {
+      color = backgroundColor
+      pressure = 2
+      lineSize = 20
+    }
   }
 
   const newLine = {
@@ -84,8 +97,8 @@ function draw (event) {
     endX: event.clientX,
     endY: event.clientY,
     color: color,
-    size: currentLineSize,
-    pressure: event.pressure || lastPressure
+    size: lineSize,
+    pressure: pressure
   }
 
   drawLine(newLine);
@@ -96,8 +109,12 @@ function draw (event) {
 
 function movimentStarted (event) {
   event.preventDefault()
-  isDrawing = true;
-  [lastX, lastY] = [event.clientX, event.clientY]
+  isDrawing = true
+  lastX = event.clientX
+  lastY = event.clientY
+  if (penMode == null) {
+    penMode = (event.pointerType === 'pen')
+  }
 }
 
 function movementEnded (event) {
