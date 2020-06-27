@@ -2,99 +2,99 @@
 <html lang="en">
 
 <head>
-  <link rel="manifest" href="/manifest.json">
-  <meta charset="UTF-8">
-  <meta name="Description" content="Digital [White|Black]Boards with Real-Time support">
-  <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+    <link rel="manifest" href="/manifest.json">
+    <meta charset="UTF-8">
+    <meta name="Description" content="Digital [White|Black]Boards with Real-Time support">
+    <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
 
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="LiveBoards">
-  <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="LiveBoards">
+    <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png">
 
 
-  <meta name="theme-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#FFFFFF" />
 
-  <title>LiveBoards</title>
-  <link rel="stylesheet" href="/css/bulma.min.css">
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.0.2/dist/bulma-tooltip.min.css">
-  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <title>LiveBoards</title>
+    <link rel="stylesheet" href="/css/bulma.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.0.2/dist/bulma-tooltip.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
 </head>
 
 <body data-theme=ligth class="noselect">
-  <canvas id="draw" width="800" height="800" class="noselect"></canvas>
-  <div class="container noselect">
-    <div class="content">
-      <form id="toolbar" class="form">
-        <div class="field is-horizontal">
-          <div class="field-body">
-            <div class="field">
-              <button id="themeButton" type="button" aria-label="Change Theme" data-tooltip="Change Theme" class="button is-small">🌓</button>
-              <button id="newButton" type="button" aria-label="New Board" data-tooltip="New Board" class="button is-small is-primary">
+    <canvas id="draw" width="800" height="800" class="noselect"></canvas>
+    <div class="container noselect">
+        <div class="content">
+            <form id="toolbar" class="form">
+                <div class="field is-horizontal">
+                    <div class="field-body">
+                        <div class="field">
+                            <button id="themeButton" type="button" aria-label="Change Theme" data-tooltip="Change Theme" class="button is-small">🌓</button>
+                            <button id="newButton" type="button" aria-label="New Board" data-tooltip="New Board" class="button is-small is-primary">
                 <span class="icon">
                   <i class="fas fa-file"></i>
                 </span>
               </button>
-              <button id="downloadButton" type="button" aria-label="Download" data-tooltip="Download" class="button is-small is-success">
+                            <button id="downloadButton" type="button" aria-label="Download" data-tooltip="Download" class="button is-small is-success">
                 <span class="icon">
                   <i class="fas fa-download"></i>
                 </span>
               </button>
-              <button id="shareButton" type="button" aria-label="Share Board" data-tooltip="Share Board" class="button is-small is-info">
+                            <button id="shareButton" type="button" aria-label="Share Board" data-tooltip="Share Board" class="button is-small is-info">
                 <span class="icon">
                   <i class="fas fa-share"></i>
                 </span>
               </button>
-            </div>
-            <div class="field">
-              <label class="checkbox is-pulled-right">
+                        </div>
+                        <div class="field">
+                            <label class="checkbox is-pulled-right">
                 <input id="rainbowControl" name="rainbowControl" type="checkbox">
                 🌈
               </label>
-            </div>
-            <div class="field">
-              <p class="control is-expanded has-icons-left">
-                <input id="colorInput" type="color" value="#0000FF" class="input is-small">
-                <span class="icon is-small is-left">
+                        </div>
+                        <div class="field">
+                            <p class="control is-expanded has-icons-left">
+                                <input id="colorInput" type="color" value="#0000FF" class="input is-small">
+                                <span class="icon is-small is-left">
                   <i class="fas fa-palette"></i>
                 </span>
-              </p>
-            </div>
-            <div class="field">
-              <p class="control is-expanded has-icons-left">
-                <input id="sizeInput" type="range" min="5" max="50" value="10" class="input is-small">
-                <span class="icon is-small is-left">
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control is-expanded has-icons-left">
+                                <input id="sizeInput" type="range" min="5" max="50" value="10" class="input is-small">
+                                <span class="icon is-small is-left">
                   <i class="fas fa-pencil-alt"></i>
                 </span>
-              </p>
-            </div>
-            <div class="field">
-              <div class="field-group is-pulled-right">
-                <button id="refreshButton" type="button" aria-label="Refresh Page" data-tooltip="Refresh Page" class="button is-small is-warning">
+                            </p>
+                        </div>
+                        <div class="field">
+                            <div class="field-group is-pulled-right">
+                                <button id="refreshButton" type="button" aria-label="Refresh Page" data-tooltip="Refresh Page" class="button is-small is-warning">
                   <span class="icon">
                     <i class="fas fa-retweet"></i>
                   </span>
                 </button>
-                <button id="clearButton" type="button" aria-label="Clear Screen" data-tooltip="Clear Screen" class="button is-small is-danger">
+                                <button id="clearButton" type="button" aria-label="Clear Screen" data-tooltip="Clear Screen" class="button is-small is-danger">
                   <span class="icon">
                     <i class="fas fa-eraser"></i>
                   </span>
                 </button>
-              </div>
-            </div>
-          </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 
 </html>
