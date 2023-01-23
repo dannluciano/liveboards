@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node boardserver.js",
     "build": "npx workbox generateSW",
-    "deploy": "git push heroku master"
+    "deploy": "git push dokku master"
   },
   "author": "",
   "license": "ISC",
