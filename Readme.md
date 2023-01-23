@@ -1,7 +1,7 @@
-# [LiveBoards](https://liveboards.herokuapp.com/)
+# [LiveBoards](https://liveboards.dannluciano.com.br/)
 
 Digital [White|Black]Boards with Real-Time support.
-See this in [action](https://liveboards.herokuapp.com/).
+See this in [action](https://liveboards.dannluciano.com.br/).
 
 ## Features
 
