@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
     socket.join(room)
   })
   socket.on('newline', (room, msg) => {
-    socket.to(room).broadcast.emit('drawline', msg)
+    socket.to(room).emit('drawline', msg)
   })
   socket.on('clear', (room) => {
     socket.to(room).emit('clear', true)
