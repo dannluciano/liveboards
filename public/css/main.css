@@ -23,7 +23,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     scrollbar-width: none;
     background-color: white;
@@ -54,12 +55,4 @@ button {
     -ms-user-select: none;
     /* Internet Explorer/Edge */
     user-select: none;
-}
-
-.button {
-    background-color: var(--bg);
-}
-
-.input {
-    background-color: var(--bg);
 }
